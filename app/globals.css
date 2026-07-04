@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --primary-yellow: #FFD700;
+    --primary-black: #000000;
+  }
+
+  body {
+    @apply antialiased;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .gradient-yellow {
+    background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+  }
+
+  .border-glow {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  }
+}
