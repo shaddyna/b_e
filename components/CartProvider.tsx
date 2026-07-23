@@ -231,7 +231,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [user]);
 
-  const fetchCart = async () => {
+  /*const fetchCart = async () => {
     try {
       const response = await fetch("/api/cart");
       if (response.ok) {
@@ -243,7 +243,32 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     } finally {
       setLoading(false);
     }
-  };
+  };*/
+
+  const fetchCart = async () => {
+  try {
+    const response = await fetch("/api/cart");
+
+    console.log("Cart API response status:", response.status);
+
+    if (response.ok) {
+      const data = await response.json();
+
+      console.log("Cart data fetched:", data);
+      console.log("Cart items:", data.cart?.items);
+
+      setCart(data.cart);
+    } else {
+      const errorData = await response.json();
+      console.log("Cart API error:", errorData);
+    }
+
+  } catch (error) {
+    console.error("Error fetching cart:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const addToCart = async (productId: string, quantity = 1, size?: string, color?: string) => {
     if (!user) {

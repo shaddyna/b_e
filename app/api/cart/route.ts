@@ -132,7 +132,7 @@ export async function DELETE(request: Request) {
   }
 }*/
 
-import { NextResponse } from "next/server";
+/*import { NextResponse } from "next/server";
 import {dbConnect } from "@/lib/mongodb";
 import Cart from "@/models/Cart";
 import Product from "@/models/Product";
@@ -163,11 +163,18 @@ export async function GET(request: Request) {
       { status: 500 }
     );
   }
-}
+}*/
 
-/*export async function POST(request: Request) {
+import { NextResponse } from "next/server";
+import { dbConnect } from "@/lib/mongodb";
+import Cart from "@/models/Cart";
+import { requireAuth } from "@/lib/auth";
+import Product from "@/models/Product";
+
+export async function GET(request: Request) {
   try {
     const user = await requireAuth(request as any);
+
     if (!user) {
       return NextResponse.json(
         { success: false, error: "Unauthorized" },
@@ -175,28 +182,10 @@ export async function GET(request: Request) {
       );
     }
 
-    const { productId, quantity = 1, size, color } = await request.json();
-
     await dbConnect();
 
-    // Get product
-    const product = await Product.findById(productId);
-    if (!product) {
-      return NextResponse.json(
-        { success: false, error: "Product not found" },
-        { status: 404 }
-      );
-    }
-
-    if (product.stock < quantity) {
-      return NextResponse.json(
-        { success: false, error: "Insufficient stock" },
-        { status: 400 }
-      );
-    }
-
-    // Find or create cart
-    let cart = await Cart.findOne({ user: user._id });
+    let cart = await Cart.findOne({ user: user._id })
+      .populate("items.product");
 
     if (!cart) {
       cart = await Cart.create({
@@ -205,41 +194,37 @@ export async function GET(request: Request) {
       });
     }
 
-    // Check if product already in cart
-    const existingItemIndex = cart.items.findIndex(
-      (item) => 
-        item.product.toString() === productId && 
-        item.size === size && 
-        item.color === color
+    // Remove cart items where the product no longer exists
+    const validItems = cart.items.filter(
+      (item: any) => item.product !== null
     );
 
-    if (existingItemIndex > -1) {
-      // Update quantity
-      cart.items[existingItemIndex].quantity += quantity;
-    } else {
-      // Add new item - DON'T manually set _id, let MongoDB generate it
-      cart.items.push({
-        product: productId,
-        quantity,
-        size,
-        color,
-        price: product.price,
-        _id: ""
-      });
+    // If invalid products were found, update database
+    if (validItems.length !== cart.items.length) {
+      cart.items = validItems;
+      await cart.save();
     }
 
-    await cart.save();
-    await cart.populate("items.product");
-
-    return NextResponse.json({ success: true, cart }, { status: 200 });
-  } catch (error: any) {
-    console.error("Error adding to cart:", error);
     return NextResponse.json(
-      { success: false, error: error.message },
+      {
+        success: true,
+        cart,
+      },
+      { status: 200 }
+    );
+
+  } catch (error: any) {
+    console.error("Cart GET Error:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: error.message,
+      },
       { status: 500 }
     );
   }
-}*/
+}
 
 export async function POST(request: Request) {
   try {
