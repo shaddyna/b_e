@@ -923,18 +923,18 @@ export default function ProductPage() {
           </motion.div>
         </div>
         <QuickBuyModal
-  isOpen={showQuickBuy}
-  onClose={() => setShowQuickBuy(false)}
-  product={{
-    _id: product._id,
-    name: product.name,
-    price: product.price,
-    image: product.images?.[0]?.url || '/placeholder.jpg',
-  }}
-  selectedSize={selectedSize}
-  selectedColor={selectedColor}
-  quantity={quantity}
-/>
+          isOpen={showQuickBuy}
+          onClose={() => setShowQuickBuy(false)}
+          product={{
+            _id: product._id,
+            name: product.name,
+            price: product.price,
+            image: product.images?.[0]?.url || '/placeholder.jpg',
+          }}
+          selectedSize={selectedSize}
+          selectedColor={selectedColor}
+          quantity={quantity}
+        />
       </div>
     </div>
   );
