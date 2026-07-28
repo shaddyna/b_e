@@ -507,7 +507,7 @@ export default function QuickBuyModal({
     street: "",
     city: "Nairobi",
     state: "",
-    zipCode: "",
+    //zipCode: "",
     country: "Kenya",
     paymentMethod: "mpesa" as "mpesa" | "cash",
   });
@@ -631,7 +631,7 @@ export default function QuickBuyModal({
           street: formData.street,
           city: formData.city,
           state: formData.state,
-          zipCode: formData.zipCode,
+          //zipCode: formData.zipCode,
           country: formData.country,
         },
         contactInfo: {
@@ -735,7 +735,7 @@ export default function QuickBuyModal({
       street: "",
       city: "Nairobi",
       state: "",
-      zipCode: "",
+      //zipCode: "",
       country: "Kenya",
       paymentMethod: "mpesa",
     });
