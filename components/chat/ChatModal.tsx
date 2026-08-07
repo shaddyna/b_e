@@ -949,7 +949,7 @@ const handleSendMessage = async (e: React.FormEvent) => {
                   className="w-full p-4 hover:bg-white/5 transition-colors text-left"
                 >
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
+                    {/*<div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center">
                         <UserIcon className="w-5 h-5 text-black" />
                       </div>
@@ -961,7 +961,27 @@ const handleSendMessage = async (e: React.FormEvent) => {
                           {conv.lastMessage || "No messages yet"}
                         </p>
                       </div>
-                    </div>
+                    </div>*/}
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center">
+                          <UserIcon className="w-5 h-5 text-black" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium text-white">
+                              {conv.otherUser.name}
+                            </p>
+                            {conv.otherUser.role === "admin" && (
+                              <span className="text-xs px-2 py-0.5 bg-yellow-500/20 text-yellow-500 rounded-full">
+                                Admin
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-400 truncate w-48">
+                            {conv.lastMessage || "No messages yet"}
+                          </p>
+                        </div>
+                      </div>
                     <div className="text-right">
                       <p className="text-xs text-gray-500">
                         {conv.lastMessageAt ? new Date(conv.lastMessageAt).toLocaleDateString() : "New"}
@@ -1003,7 +1023,7 @@ const handleSendMessage = async (e: React.FormEvent) => {
                 </div>
 
                 <div className="divide-y divide-yellow-500/10">
-                  {users.map((user) => (
+                  {/*{users.map((user) => (
                     <button
                       key={user._id}
                       onClick={() => handleSelectUser(user)}
@@ -1019,7 +1039,31 @@ const handleSendMessage = async (e: React.FormEvent) => {
                         </div>
                       </div>
                     </button>
-                  ))}
+                  ))}*/}
+                  {users.map((user) => (
+  <button
+    key={user._id}
+    onClick={() => handleSelectUser(user)}
+    className="w-full p-4 hover:bg-white/5 transition-colors text-left"
+  >
+    <div className="flex items-center gap-3">
+      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center">
+        <UserIcon className="w-5 h-5 text-black" />
+      </div>
+      <div className="flex-1">
+        <div className="flex items-center gap-2">
+          <p className="font-medium text-white">{user.name}</p>
+          {user.role === "admin" && (
+            <span className="text-xs px-2 py-0.5 bg-yellow-500/20 text-yellow-500 rounded-full">
+              Admin
+            </span>
+          )}
+        </div>
+        <p className="text-sm text-gray-400">{user.email}</p>
+      </div>
+    </div>
+  </button>
+))}
                 </div>
               </div>
             ) : (
