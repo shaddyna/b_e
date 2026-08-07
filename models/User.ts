@@ -116,18 +116,32 @@ const UserSchema: Schema<IUser> = new Schema(
 );
 
 // Hash password before saving
-UserSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
-    return ;
-  }
+// UserSchema.pre("save", async function (next) {
+//   if (!this.isModified("password")) {
+//     return ;
+//   }
   
+//   try {
+//     const salt = await bcrypt.genSalt(12);
+//     this.password = await bcrypt.hash(this.password, salt);
+   
+//   } catch (error: any) {
+//     console.error("Error hashing password:", error);
+    
+//   }
+// });
+// Hash password before saving
+UserSchema.pre("save", async function () {
+  if (!this.isModified("password")) {
+    return;
+  }
+
   try {
     const salt = await bcrypt.genSalt(12);
     this.password = await bcrypt.hash(this.password, salt);
-   
   } catch (error: any) {
     console.error("Error hashing password:", error);
-    
+    throw error;
   }
 });
 
