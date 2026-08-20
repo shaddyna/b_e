@@ -1,68 +1,140 @@
-/*const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
+// /*const mongoose = require("mongoose");
+// const bcrypt = require("bcryptjs");
 
-const UserSchema = new mongoose.Schema(
-  {
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true, lowercase: true },
-    phone: { type: String, sparse: true },
-    password: { type: String, required: true },
-    role: { type: String, enum: ["customer", "admin"], default: "customer" },
+// const UserSchema = new mongoose.Schema(
+//   {
+//     name: { type: String, required: true },
+//     email: { type: String, required: true, unique: true, lowercase: true },
+//     phone: { type: String, sparse: true },
+//     password: { type: String, required: true },
+//     role: { type: String, enum: ["customer", "admin"], default: "customer" },
 
-    address: {
-      street: { type: String },
-      city: { type: String },
-      state: { type: String },
-      zipCode: { type: String },
-      country: { type: String, default: "Kenya" },
-      phone: { type: String },
-    },
-  },
-  {
-    timestamps: true,
+//     address: {
+//       street: { type: String },
+//       city: { type: String },
+//       state: { type: String },
+//       zipCode: { type: String },
+//       country: { type: String, default: "Kenya" },
+//       phone: { type: String },
+//     },
+//   },
+//   {
+//     timestamps: true,
 
-    toJSON: {
-      transform: function (doc, ret) {
-        delete ret.password;
-        return ret;
-      },
-    },
-  }
-);
+//     toJSON: {
+//       transform: function (doc, ret) {
+//         delete ret.password;
+//         return ret;
+//       },
+//     },
+//   }
+// );
 
-//
-// 🔐 HASH PASSWORD BEFORE SAVE
-//
-UserSchema.pre("save", async function (next) {
-  try {
-    if (!this.isModified("password")) return next();
+// //
+// // 🔐 HASH PASSWORD BEFORE SAVE
+// //
+// UserSchema.pre("save", async function (next) {
+//   try {
+//     if (!this.isModified("password")) return next();
 
-    const salt = await bcrypt.genSalt(12);
-    this.password = await bcrypt.hash(this.password, salt);
+//     const salt = await bcrypt.genSalt(12);
+//     this.password = await bcrypt.hash(this.password, salt);
 
-    next();
-  } catch (error) {
-    console.error("Error hashing password:", error);
-    next(error);
-  }
-});
+//     next();
+//   } catch (error) {
+//     console.error("Error hashing password:", error);
+//     next(error);
+//   }
+// });
 
-//
-// 🔑 COMPARE PASSWORD METHOD
-//
-UserSchema.methods.comparePassword = async function (candidatePassword) {
-  try {
-    return await bcrypt.compare(candidatePassword, this.password);
-  } catch (error) {
-    console.error("Error comparing passwords:", error);
-    return false;
-  }
-};
+// //
+// // 🔑 COMPARE PASSWORD METHOD
+// //
+// UserSchema.methods.comparePassword = async function (candidatePassword) {
+//   try {
+//     return await bcrypt.compare(candidatePassword, this.password);
+//   } catch (error) {
+//     console.error("Error comparing passwords:", error);
+//     return false;
+//   }
+// };
 
-//
-// 🚀 MODEL EXPORT (IMPORTANT FOR SOCKET SERVER)
-//
-module.exports = mongoose.models.User || mongoose.model("User", UserSchema);*/
+// //
+// // 🚀 MODEL EXPORT (IMPORTANT FOR SOCKET SERVER)
+// //
+// module.exports = mongoose.models.User || mongoose.model("User", UserSchema);*/
+
+// const mongoose = require("mongoose");
+// const bcrypt = require("bcryptjs");
+
+// const UserSchema = new mongoose.Schema(
+//   {
+//     name: { type: String, required: true },
+//     email: { type: String, required: true, unique: true, lowercase: true },
+//     phone: { type: String, sparse: true },
+//     password: { type: String, required: true },
+//     role: { type: String, enum: ["customer", "admin"], default: "customer" },
+
+//     // ✅ ADD FCM TOKENS HERE
+//     fcmTokens: {
+//       type: [String],
+//       default: [],
+//     },
+
+//     address: {
+//       street: { type: String },
+//       city: { type: String },
+//       state: { type: String },
+//       zipCode: { type: String },
+//       country: { type: String, default: "Kenya" },
+//       phone: { type: String },
+//     },
+//   },
+//   {
+//     timestamps: true,
+
+//     toJSON: {
+//       transform: function (doc, ret) {
+//         delete ret.password;
+//         return ret;
+//       },
+//     },
+//   }
+// );
+
+// //
+// // 🔐 HASH PASSWORD BEFORE SAVE
+// //
+// UserSchema.pre("save", async function (next) {
+//   try {
+//     if (!this.isModified("password")) return next();
+
+//     const salt = await bcrypt.genSalt(12);
+//     this.password = await bcrypt.hash(this.password, salt);
+
+//     next();
+//   } catch (error) {
+//     console.error("Error hashing password:", error);
+//     next(error);
+//   }
+// });
+
+// //
+// // 🔑 COMPARE PASSWORD METHOD
+// //
+// UserSchema.methods.comparePassword = async function (candidatePassword) {
+//   try {
+//     return await bcrypt.compare(candidatePassword, this.password);
+//   } catch (error) {
+//     console.error("Error comparing passwords:", error);
+//     return false;
+//   }
+// };
+
+// //
+// // 🚀 MODEL EXPORT
+// //
+// module.exports = mongoose.models.User || mongoose.model("User", UserSchema);
 
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
@@ -70,12 +142,31 @@ const bcrypt = require("bcryptjs");
 const UserSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true, lowercase: true },
-    phone: { type: String, sparse: true },
-    password: { type: String, required: true },
-    role: { type: String, enum: ["customer", "admin"], default: "customer" },
 
-    // ✅ ADD FCM TOKENS HERE
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+
+    phone: {
+      type: String,
+      sparse: true,
+    },
+
+    password: {
+      type: String,
+      required: true,
+    },
+
+    role: {
+      type: String,
+      enum: ["customer", "admin"],
+      default: "customer",
+    },
+
     fcmTokens: {
       type: [String],
       default: [],
@@ -86,7 +177,10 @@ const UserSchema = new mongoose.Schema(
       city: { type: String },
       state: { type: String },
       zipCode: { type: String },
-      country: { type: String, default: "Kenya" },
+      country: {
+        type: String,
+        default: "Kenya",
+      },
       phone: { type: String },
     },
   },
@@ -102,26 +196,22 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
-//
 // 🔐 HASH PASSWORD BEFORE SAVE
-//
-UserSchema.pre("save", async function (next) {
-  try {
-    if (!this.isModified("password")) return next();
+UserSchema.pre("save", async function () {
+  if (!this.isModified("password")) {
+    return;
+  }
 
+  try {
     const salt = await bcrypt.genSalt(12);
     this.password = await bcrypt.hash(this.password, salt);
-
-    next();
   } catch (error) {
     console.error("Error hashing password:", error);
-    next(error);
+    throw error;
   }
 });
 
-//
-// 🔑 COMPARE PASSWORD METHOD
-//
+// 🔑 COMPARE PASSWORD
 UserSchema.methods.comparePassword = async function (candidatePassword) {
   try {
     return await bcrypt.compare(candidatePassword, this.password);
@@ -131,7 +221,6 @@ UserSchema.methods.comparePassword = async function (candidatePassword) {
   }
 };
 
-//
 // 🚀 MODEL EXPORT
-//
-module.exports = mongoose.models.User || mongoose.model("User", UserSchema);
+module.exports =
+  mongoose.models.User || mongoose.model("User", UserSchema);
