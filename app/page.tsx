@@ -11,7 +11,7 @@ export default function Home() {
       <Navbar />
       <HeroSection />
       <FeaturedProducts />
-      <FeaturedCollections />
+      {/*<FeaturedCollections />*/}
       {/*<Newsletter />*/}
       <Footer />
     </div>
