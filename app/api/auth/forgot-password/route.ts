@@ -259,7 +259,7 @@ export async function POST(request: NextRequest) {
       });
       
       // Create reset link
-      const resetLink = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/reset-password/${token}`;
+      const resetLink = `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.xtremeluxurycollection.co.ke'}/reset-password/${token}`;
       
       // Create WhatsApp message
       const message = `🔐 *Password Reset Request*\n\nHello ${user.name || 'User'},\n\nClick the link below to reset your password:\n\n${resetLink}\n\nThis link will expire in 1 hour.\n\nIf you didn't request this, please ignore this message.`;
